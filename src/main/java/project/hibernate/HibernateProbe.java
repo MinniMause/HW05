@@ -9,34 +9,49 @@ import org.hibernate.service.ServiceRegistry;
 public class HibernateProbe {
 
 	public static void main(String[] args) {
-		try {
-			User user = new User();
-			user.setId(4);
-			user.setName("Name4");
-			user.setEmail("adresse4@yahoo.com");
 
-			Role role = new Role();
-			role.setId(2);
-			role.setName("Admin");
-			user.setRole(role);
+		User user01 = new User();
+		User user02 = new User();
+		User user03 = new User();
 
-			Session session = createSession();
-			session.beginTransaction();
+		Role r1 = new Role();
+		r1.setId(40);
+		r1.setName("SuperAdmin");
 
-			session.save(user);
-			session.save(role);
+		Role r2 = new Role();
+		r2.setId(22);
+		r2.setName("SysAdmin");
 
-			session.getTransaction().commit();
-			session.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			System.exit(0);
-		}
+		user01.setId(1);
+		user01.setName("Name1");
+		user01.setEmail("a1@yahoo.com");
+		user01.setRole(r1);
+
+		user02.setId(2);
+		user02.setName("Name2");
+		user02.setEmail("a2@yahoo.com");
+		user02.setRole(r2);
+
+		user03.setId(18);
+		user03.setName("Name18");
+		user03.setEmail("a18@yahoo.com");
+		user03.setRole(r2);
+
+		UsersDao usersDao = new UsersDao();
+
+		User user1 = usersDao.findById(3);
+		System.out.println(user1.getId() + " " + user1.getName());
+
+		User user3 = usersDao.saveUser(user03, r2);
+		System.out.println(user3.getId() + " " + user3.getName() + " " + " saved .");
+
+		// User deletedUser = usersDao.deleteUser(4);
+		// System.out.println(deletedUser.getId() + " " + deletedUser.getName()
+		// + " from tabel");
 
 	}
 
-	private static Session createSession() {
+	public static Session createSession() {
 		Configuration configuration = new Configuration();
 		configuration.configure("hibernate.cfg.xml");
 
