@@ -1,5 +1,6 @@
 package project.hibernate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,8 +16,8 @@ public class User {
 	@Column(name = "ID")
 	private int id;
 
-	@OneToOne
-	@JoinColumn(name="role_id")
+	@OneToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "role_id")
 	private Role role;
 
 	@Column(name = "NAME")

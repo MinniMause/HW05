@@ -15,7 +15,7 @@ public class DaoPatternDemo {
 		userDao.updateUser(user);
 
 		// get the user
-		userDao.getUser(0);
+		userDao.findById(0);
 		System.out.println("User:" + user.getId() + ", Name : " + user.getName());
 
 	}

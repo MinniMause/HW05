@@ -1,48 +1,99 @@
 package project.hibernate;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
+/**
+ *
+ */
 public class UserDaoImpl implements UserDao {
 
-	// list is working as a database
-	List<User> users;
+	private static Session createSession() {
+		Configuration configuration = new Configuration();
+		configuration.configure("hibernate.cfg.xml");
 
-	public UserDaoImpl() {
-		users = new ArrayList<User>();
-		User user1 = new User();
-//		user1.setId(4);
-//		user1.setName("Name4");
-//		user1.setEmail("adresse4@yahoo.com");
+		configuration.addAnnotatedClass(User.class);
+		configuration.addAnnotatedClass(Role.class);
 
-		User user2 = new User();
-		User user3 = new User();
+		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+				.applySettings(configuration.getProperties()).build();
+		SessionFactory factory = configuration.buildSessionFactory(serviceRegistry);
+		Session session = factory.getCurrentSession();
+		return session;
 
-		users.add(user1);
-		users.add(user2);
-		users.add(user3);
+	}
+
+	public User deleteUser(Integer id) {
+		Session session = createSession();
+		session.beginTransaction();
+
+		User user = session.find(User.class, id);
+		session.delete(user);
+
+		session.getTransaction().commit();
+		return user;
 	}
 
 	@Override
 	public void deleteUser(User user) {
-		users.remove(user.getId());
-		System.out.println("User " + user.getId() + ", deleted from database");
+		Session session = createSession();
+		session.beginTransaction();
+
+		session.delete(user);
+
+		session.getTransaction().commit();
+
+	}
+
+	public User findById(Integer id) {
+		Session session = createSession();
+		session.beginTransaction();
+
+		User user = session.find(User.class, id);
+
+		session.getTransaction().commit();
+		return user;
+	}
+
+	public List<User> findByName(String pname) {
+		Session session = createSession();
+		session.beginTransaction();
+
+		EntityManager em = session.getEntityManagerFactory().createEntityManager();
+		TypedQuery<User> query = em.createQuery("SELECT u FROM users u WHERE u.name ='" + pname + "'", User.class);
+		List<User> result = query.getResultList();
+
+		session.getTransaction().commit();
+		return result;
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		return users;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	@Override
-	public User getUser(int userId) {
-		return users.get(userId);
+	public User saveUser(User user, Role role) {
+		Session session = createSession();
+		session.beginTransaction();
+		session.save(user);
+		session.save(role);
+		session.getTransaction().commit();
+		return user;
 	}
 
 	@Override
 	public void updateUser(User user) {
-		users.get(user.getId()).setName(user.getName());
-		System.out.println("user " + user.getId() + ", updated in the database");
+		// TODO Auto-generated method stub
+
 	}
 
 }

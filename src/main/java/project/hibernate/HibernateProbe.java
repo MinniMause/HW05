@@ -1,5 +1,7 @@
 package project.hibernate;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -37,17 +39,23 @@ public class HibernateProbe {
 		user03.setEmail("a18@yahoo.com");
 		user03.setRole(r2);
 
-		UsersDao usersDao = new UsersDao();
+		UserDaoImpl usersDao = new UserDaoImpl();
 
 		User user1 = usersDao.findById(3);
 		System.out.println(user1.getId() + " " + user1.getName());
 
-		User user3 = usersDao.saveUser(user03, r2);
-		System.out.println(user3.getId() + " " + user3.getName() + " " + " saved .");
+		List<User> results = usersDao.findByName("Name1");
+		System.out.println("Begin :");
+		for (User user : results) {
+			System.out.println(user.getId() + " " + user.getName() + " " + user.getEmail());
+		}
+		System.out.println("end");
 
-		// User deletedUser = usersDao.deleteUser(4);
-		// System.out.println(deletedUser.getId() + " " + deletedUser.getName()
-		// + " from tabel");
+		User user3 = usersDao.saveUser(user03, r2);
+		System.out.println(user3.getId() + " " + user3.getName() + " " + "  saved .");
+
+		User deletedUser = usersDao.deleteUser(4);
+		System.out.println(deletedUser.getId() + " " + deletedUser.getName() + " from tabel");
 
 	}
 

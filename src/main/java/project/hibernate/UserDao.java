@@ -3,12 +3,15 @@ package project.hibernate;
 import java.util.List;
 
 public interface UserDao {
-	public List<User> getAllUsers();
 
-	public User getUser(int userId);
+	User deleteUser(Integer id);
 
-	public void updateUser(User user);
+	void deleteUser(User user);
 
-	public void deleteUser(User user);
+	User findById(Integer id);
+
+	List<User> getAllUsers();
+
+	void updateUser(User user);
 
 }
